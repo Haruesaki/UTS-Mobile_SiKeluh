@@ -1,4 +1,4 @@
-package com.example.sikeluh.ui.screens
+package com.example.sikeluh
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -19,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sikeluh.ui.components.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

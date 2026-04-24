@@ -1,4 +1,4 @@
-package com.example.sikeluh.ui.screens
+package com.example.sikeluh
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.Image
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -18,8 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sikeluh.ui.components.BottomNavigationBar
+import androidx.compose.ui.layout.ContentScale
 import com.example.sikeluh.ui.theme.SiKeluhTheme
+import androidx.compose.ui.res.painterResource
+import com.example.sikeluh.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,9 +44,18 @@ fun HomeScreen() {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Placeholder Foto Profil
-                    Box(modifier = Modifier.size(40.dp).clip(CircleShape).border(1.dp, Color.Gray, CircleShape))
+                    // Gambar Profil Bulat
+                    Image(
+                        painter = painterResource(id = R.drawable.pp), // Mengambil gambar pp.jpg dari drawable
+                        contentDescription = "Foto Profil",
+                        contentScale = ContentScale.Crop, // Memotong gambar agar pas dengan bentuk
+                        modifier = Modifier
+                            .size(40.dp) // Ukuran gambar
+                            .clip(CircleShape) // Membuat bentuknya menjadi lingkaran
+                    )
+
                     Text("Si Keluh", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+
                     Row {
                         Icon(Icons.Default.Notifications, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
@@ -61,36 +73,79 @@ fun HomeScreen() {
             // Hero Card
             item {
                 Card(
-                    modifier = Modifier.fillMaxWidth().height(150.dp),
+                    modifier = Modifier.fillMaxWidth().height(160.dp), // Sedikit ditinggikan agar proporsional
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF2D4653)),
                     shape = RoundedCornerShape(16.dp)
                 ) {
-                    Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                        Column {
-                            Text("Keluhan Anda,\nTugas Kami,\nTindak Lanjut Mereka", color = Color.White, fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        // Bagian Kiri: Teks dan Tombol
+                        Column(
+                            modifier = Modifier.weight(1f) // Mengambil sisa ruang agar teks tidak menabrak gambar
+                        ) {
+                            Text(
+                                "Keluhan Anda,\nTugas Kami,\nTindak Lanjut Mereka",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                lineHeight = 22.sp
+                            )
                             Spacer(modifier = Modifier.weight(1f))
                             Button(
                                 onClick = { },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1CB58F))
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1CB58F)),
+                                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
                             ) {
-                                Text("Buat Aduan Baru")
-                                Icon(Icons.Default.ArrowForward, contentDescription = null, modifier = Modifier.padding(start = 4.dp))
+                                Text("Buat Aduan Baru", fontSize = 12.sp)
+                                Icon(
+                                    Icons.Default.ArrowForward,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(start = 4.dp).size(16.dp)
+                                )
                             }
                         }
+
+                        // Bagian Kanan: Gambar Istana
+                        Image(
+                            painter = painterResource(id = R.drawable.istana), // Memanggil gambar dari folder drawable
+                            contentDescription = "Ilustrasi Istana",
+                            modifier = Modifier
+                                .size(110.dp)
+                                .padding(start = 8.dp) // Memberi sedikit jarak dari teks
+                        )
                     }
                 }
             }
 
             // Aduan Terbaru
             item { SectionTitle(title = "Aduan Terbaru") }
-            item { AduanCardPlaceholder("Jalan Rusak", "Dalam Proses", Color(0xFF81C784)) }
+            item {
+                AduanCardPlaceholder(
+                    title = "Jalan Rusak",
+                    status = "Dalam Proses",
+                    statusColor = Color(0xFF81C784),
+                    imageResId = R.drawable.jalanrusak // <-- Tambahan wajib di sini
+                )
+            }
 
             // Jelajahi Aduan
             item { SectionTitle(title = "Jelajahi Aduan") }
-            item { AduanCardPlaceholder("Jalan Rusak", "Selesai", Color(0xFFAED581)) }
+            item {
+                AduanCardPlaceholder(
+                    title = "Jalan Rusak",
+                    status = "Selesai",
+                    statusColor = Color(0xFFAED581),
+                    imageResId = R.drawable.jalanbagus // <-- Tambahan wajib di sini
+                )
+            }
 
             // Kategori
-            item { Text("Kategori Aduan", fontWeight = FontWeight.Bold, fontSize = 18.sp) }
+            item { Text("Kategori Aduan", fontWeight = FontWeight.Bold, fontSize = 18.sp, modifier = Modifier.padding(top = 8.dp)) }
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     CategoryIcon(Icons.Default.Build, "Jalan &\nInfrastruktur")
@@ -113,15 +168,24 @@ fun SectionTitle(title: String) {
 }
 
 @Composable
-fun AduanCardPlaceholder(title: String, status: String, statusColor: Color) {
+fun AduanCardPlaceholder(title: String, status: String, statusColor: Color, imageResId: Int) {
     Card(modifier = Modifier.fillMaxWidth().height(100.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFF2D4653))) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            // Gambar Placeholder
-            Box(modifier = Modifier.size(76.dp).border(1.dp, Color.White, RoundedCornerShape(8.dp)))
+
+            // Komponen Image pengganti Box Placeholder
+            Image(
+                painter = painterResource(id = imageResId),
+                contentDescription = title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(76.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Card(colors = CardDefaults.cardColors(containerColor = statusColor)) {
-                    Text(status, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), fontSize = 10.sp)
+                    Text(status, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), fontSize = 10.sp, color = Color.DarkGray)
                 }
                 Text(title, color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 4.dp))
                 Text("Jl. Merdeka No.123...", color = Color.LightGray, fontSize = 12.sp)
