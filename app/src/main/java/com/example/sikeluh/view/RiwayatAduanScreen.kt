@@ -1,0 +1,113 @@
+package com.example.sikeluh.view
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun RiwayatAduanScreen(navController: NavController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Riwayat Aduan", fontWeight = FontWeight.Bold, color = Color(0xFF198786)) },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        },
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Riwayat Aduan Saya", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                Text("Pantau status laporan yang telah Anda kirimkan.", color = Color.Gray, fontSize = 14.sp)
+            }
+
+            item {
+                AduanItemCard(
+                    navController = navController,
+                    statusText = "Dalam Proses",
+                    statusColor = Color(0xFF1E3A8A),
+                    statusBgColor = Color(0xFFDBEAFE),
+                    idAduan = "#ADU-2023-089",
+                    title = "Jalan Rusak di Jl. Merdeka Selatan",
+                    description = "Terdapat lubang besar yang membahayakan pengendara motor...",
+                    date = "12 Okt 2023"
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AduanItemCard(
+    navController: NavController,
+    statusText: String,
+    statusColor: Color,
+    statusBgColor: Color,
+    idAduan: String,
+    title: String,
+    description: String,
+    date: String
+) {
+    Card(
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(1.dp, Color.LightGray),
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(modifier = Modifier.background(statusBgColor, RoundedCornerShape(16.dp)).padding(horizontal = 10.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(statusColor))
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(statusText, color = statusColor, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                }
+                Text(idAduan, color = Color.Gray, fontSize = 12.sp)
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(title, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+            Text(description, color = Color.DarkGray, fontSize = 14.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
+
+            Spacer(modifier = Modifier.height(16.dp))
+            HorizontalDivider(color = Color.LightGray, thickness = 0.5.dp)
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(date, color = Color.DarkGray, fontSize = 14.sp)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable { navController.navigate("status") }
+                ) {
+                    Text("Detail", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Icon(Icons.Default.ArrowForward, null, Modifier.size(16.dp))
+                }
+            }
+        }
+    }
+}
