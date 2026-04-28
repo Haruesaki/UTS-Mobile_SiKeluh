@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.sikeluh.R
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.sikeluh.ui.theme.SiKeluhTheme
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -160,5 +163,16 @@ fun CategoryIcon(icon: ImageVector, label: String) {
             Icon(icon, null, tint = Color.White)
         }
         Text(label, fontSize = 10.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 4.dp))
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun HomeScreenPreview() {
+    // Membuat NavController palsu untuk keperluan preview
+    val navController = rememberNavController()
+
+    SiKeluhTheme {
+        HomeScreen(navController = navController)
     }
 }

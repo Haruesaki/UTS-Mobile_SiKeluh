@@ -17,6 +17,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.sikeluh.ui.theme.SiKeluhTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,5 +99,16 @@ fun FormAduanScreen(navController: NavController) {
                 Text("Kirim Aduan", fontSize = 16.sp)
             }
         }
+    }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun FormAduanPreview() {
+    // Membuat NavController palsu untuk keperluan preview
+    val navController = rememberNavController()
+
+    SiKeluhTheme {
+        FormAduanScreen(navController = navController)
     }
 }
