@@ -33,7 +33,7 @@ fun StatusAduanScreen(navController: NavController, status: String) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Status Aduan", fontWeight = FontWeight.Bold, color = PrimaryTeal) },
+                title = { Text("Status Aduan", style = MaterialTheme.typography.titleLarge, color = PrimaryTeal) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = PrimaryTeal)
@@ -54,14 +54,12 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Jalan Rusak di Jl. Merdeka No.123, Kecamatan lalauI",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 32.sp
+                    style = MaterialTheme.typography.headlineSmall
                 )
                 Text(
                     text = "Diadukan pada 25 November 2025",
                     color = Color.Gray,
-                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.bodySmall,
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }
@@ -78,7 +76,7 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.Chat, contentDescription = null, tint = StatusProsesText, modifier = Modifier.size(20.dp))
                             Spacer(modifier = Modifier.width(12.dp))
-                            Text("Catatan Instansi", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = StatusProsesText)
+                            Text("Catatan Instansi", style = MaterialTheme.typography.titleMedium, color = StatusProsesText)
                         }
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -91,14 +89,13 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                         ) {
                             Column {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text("Dinas Terkait", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                                    Text(" • 14 Okt 2023, 10:30 AM", color = Color.Gray, fontSize = 12.sp)
+                                    Text("Dinas Terkait", style = MaterialTheme.typography.labelLarge)
+                                    Text(" • 14 Okt 2023, 10:30 AM", color = Color.Gray, style = MaterialTheme.typography.labelSmall)
                                 }
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
                                     text = "Tim lapangan telah dikerahkan ke lokasi untuk melakukan pengecekan awal dan mempersiapkan alat berat. Estimasi pengerjaan akan memakan waktu kurang lebih 3 hari kerja. Mohon maaf atas ketidaknyamanan yang terjadi.",
-                                    fontSize = 14.sp,
-                                    lineHeight = 22.sp,
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = Color.DarkGray
                                 )
                             }
@@ -116,7 +113,7 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
-                        Text("Status Laporan", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Text("Status Laporan", style = MaterialTheme.typography.titleLarge)
                         Spacer(modifier = Modifier.height(16.dp))
                         HorizontalDivider(color = Color(0xFFE2E8F0))
                         Spacer(modifier = Modifier.height(20.dp))
@@ -185,7 +182,7 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.Chat, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Hubungi Layanan Bantuan", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                            Text("Hubungi Layanan Bantuan", style = MaterialTheme.typography.titleMedium)
                         }
                     }
                 }
@@ -246,13 +243,12 @@ fun StatusStepItem(
         Column {
             Text(
                 text = title,
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
+                style = MaterialTheme.typography.labelLarge,
                 color = if (isCompleted || isActive) DarkNavy else Color.Gray
             )
             Text(
                 text = time,
-                fontSize = 13.sp,
+                style = MaterialTheme.typography.labelSmall,
                 color = if (isCompleted || isActive) Color.DarkGray else Color.LightGray
             )
             Spacer(modifier = Modifier.height(20.dp))

@@ -1,15 +1,11 @@
 package com.example.sikeluh.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -38,7 +34,7 @@ fun BottomNavigationBar(navController: NavController) {
 
         NavigationBarItem(
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") },
+            label = { Text("Home", style = MaterialTheme.typography.labelSmall) },
             selected = currentRoute == "home",
             onClick = {
                 if (currentRoute != "home") {
@@ -52,8 +48,8 @@ fun BottomNavigationBar(navController: NavController) {
             colors = navItemColors
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.List, contentDescription = "Aduan Saya") },
-            label = { Text("Aduan Saya") },
+            icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Aduan Saya") },
+            label = { Text("Aduan Saya", style = MaterialTheme.typography.labelSmall) },
             selected = currentRoute == "riwayat",
             onClick = {
                 if (currentRoute != "riwayat") {
@@ -68,7 +64,7 @@ fun BottomNavigationBar(navController: NavController) {
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Notifications, contentDescription = "Notification") },
-            label = { Text("Notification") },
+            label = { Text("Notification", style = MaterialTheme.typography.labelSmall) },
             selected = currentRoute == "notif",
             onClick = {
                 if (currentRoute != "notif") {
@@ -83,7 +79,7 @@ fun BottomNavigationBar(navController: NavController) {
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
-            label = { Text("Profile") },
+            label = { Text("Profile", style = MaterialTheme.typography.labelSmall) },
             selected = currentRoute == "profile",
             onClick = { /* TODO */ },
             colors = navItemColors

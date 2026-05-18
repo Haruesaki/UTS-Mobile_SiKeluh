@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +54,7 @@ fun NotifikasiScreen(navController: NavController) {
                     Text(
                         "Notification",
                         color = PrimaryDark,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.titleLarge
                     )
                 },
                 navigationIcon = {
@@ -112,21 +111,19 @@ fun NotificationCard(notification: NotificationItem) {
         Column {
             Text(
                 text = notification.title,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.titleMedium,
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = notification.description,
-                fontSize = 14.sp,
-                color = Color.Black,
-                lineHeight = 20.sp
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Black
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = notification.time,
-                fontSize = 12.sp,
+                style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
             )
         }

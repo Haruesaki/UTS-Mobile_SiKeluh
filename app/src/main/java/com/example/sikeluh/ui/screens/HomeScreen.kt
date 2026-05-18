@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +53,7 @@ fun HomeScreen(navController: NavController) {
                             .size(40.dp)
                             .clip(CircleShape)
                     )
-                    Text("Si Keluh", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Text("Si Keluh", style = MaterialTheme.typography.titleLarge)
                     Row {
                         Icon(Icons.Default.Notifications, contentDescription = null)
                         Spacer(modifier = Modifier.width(8.dp))
@@ -64,8 +63,8 @@ fun HomeScreen(navController: NavController) {
             }
 
             item {
-                Text("Hallo Doni 👋", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                Text("Sampaikan keluhanmu,\nkami teruskan ke Pemerintah Daerah", color = Color.Gray)
+                Text("Hallo Doni 👋", style = MaterialTheme.typography.headlineMedium)
+                Text("Sampaikan keluhanmu,\nkami teruskan ke Pemerintah Daerah", color = Color.Gray, style = MaterialTheme.typography.bodyMedium)
             }
 
             item {
@@ -82,15 +81,14 @@ fun HomeScreen(navController: NavController) {
                             Text(
                                 "Keluhan Anda,\nTugas Kami,\nTindak Lanjut Mereka",
                                 color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
+                                style = MaterialTheme.typography.titleMedium
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Button(
                                 onClick = { navController.navigate("form") },
                                 colors = ButtonDefaults.buttonColors(containerColor = AccentGreen)
                             ) {
-                                Text("Buat Aduan Baru", fontSize = 12.sp)
+                                Text("Buat Aduan Baru", style = MaterialTheme.typography.labelMedium)
                                 Icon(Icons.Default.ArrowForward, null, Modifier.padding(start = 4.dp).size(16.dp))
                             }
                         }
@@ -113,7 +111,7 @@ fun HomeScreen(navController: NavController) {
                 AduanCardPlaceholder("Jalan Rusak", "Selesai", AduanSelesai, R.drawable.jalanbagus)
             }
 
-            item { Text("Kategori Aduan", fontWeight = FontWeight.Bold, fontSize = 18.sp) }
+            item { Text("Kategori Aduan", style = MaterialTheme.typography.titleLarge) }
             item {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     CategoryIcon(Icons.Default.Build, "Jalan &\nInfrastruktur")
@@ -130,8 +128,8 @@ fun HomeScreen(navController: NavController) {
 @Composable
 fun SectionTitle(title: String) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-        Text(title, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-        Text("Lihat Semua ->", fontSize = 12.sp, color = Color.Gray)
+        Text(title, style = MaterialTheme.typography.titleLarge)
+        Text("Lihat Semua ->", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
     }
 }
 
@@ -148,10 +146,10 @@ fun AduanCardPlaceholder(title: String, status: String, statusColor: Color, imag
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Card(colors = CardDefaults.cardColors(containerColor = statusColor)) {
-                    Text(status, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), fontSize = 10.sp, color = Color.DarkGray)
+                    Text(status, modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), style = MaterialTheme.typography.labelSmall, color = Color.DarkGray)
                 }
-                Text(title, color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 4.dp))
-                Text("Jl. Merdeka No.123...", color = Color.LightGray, fontSize = 12.sp)
+                Text(title, color = Color.White, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 4.dp))
+                Text("Jl. Merdeka No.123...", color = Color.LightGray, style = MaterialTheme.typography.bodySmall)
             }
         }
     }
@@ -163,7 +161,7 @@ fun CategoryIcon(icon: ImageVector, label: String) {
         Box(modifier = Modifier.size(60.dp).background(PrimaryDark, RoundedCornerShape(12.dp)), contentAlignment = Alignment.Center) {
             Icon(icon, null, tint = Color.White)
         }
-        Text(label, fontSize = 10.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 4.dp))
+        Text(label, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 4.dp))
     }
 }
 

@@ -46,17 +46,16 @@ fun RegisterScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Selamat Datang", color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)
+        Text("Selamat Datang", color = Color.White, style = MaterialTheme.typography.headlineLarge)
         Text(
             text = "Sistem Pengaduan Pemerintahan\nKota Bandar Lampung",
             color = Color.White,
-            fontSize = 16.sp,
-            lineHeight = 22.sp
+            style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Text("Daftar", color = Color.White, fontSize = 36.sp, fontWeight = FontWeight.Bold)
+        Text("Daftar", color = Color.White, style = MaterialTheme.typography.displaySmall)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -97,7 +96,7 @@ fun RegisterScreen(navController: NavController) {
                     checkmarkColor = AuthBg
                 )
             )
-            Text("I agree to the Terms & Conditions", color = Color.White, fontSize = 12.sp)
+            Text("I agree to the Terms & Conditions", color = Color.White, style = MaterialTheme.typography.bodySmall)
         }
 
         Spacer(modifier = Modifier.height(32.dp))

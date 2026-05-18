@@ -66,8 +66,7 @@ fun AuthSubmitButton(text: String, onClick: () -> Unit, modifier: Modifier = Mod
             Text(
                 text = text,
                 color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium
             )
         }
     }

@@ -50,17 +50,16 @@ fun LoginScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Selamat Datang", color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)
+        Text("Selamat Datang", color = Color.White, style = MaterialTheme.typography.headlineLarge)
         Text(
             text = "Sistem Pengaduan Pemerintahan\nKota Bandar Lampung",
             color = Color.White,
-            fontSize = 16.sp,
-            lineHeight = 22.sp
+            style = MaterialTheme.typography.titleMedium
         )
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Text("Login", color = Color.White, fontSize = 36.sp, fontWeight = FontWeight.Bold)
+        Text("Login", color = Color.White, style = MaterialTheme.typography.displaySmall)
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -93,7 +92,7 @@ fun LoginScreen(navController: NavController) {
                     checkmarkColor = AuthBg
                 )
             )
-            Text("Remember Me", color = Color.White, fontSize = 14.sp)
+            Text("Remember Me", color = Color.White, style = MaterialTheme.typography.bodyMedium)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -116,7 +115,7 @@ fun LoginScreen(navController: NavController) {
                 }
             },
             color = Color.White,
-            fontSize = 14.sp,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .clickable { navController.navigate("register") }

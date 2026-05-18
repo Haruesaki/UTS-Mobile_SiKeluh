@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,9 +42,8 @@ fun WelcomeScreen(navController: NavController) {
         Text(
             text = "Sistem Pengaduan Pemerintahan\nKota Bandar Lampung",
             color = Color.White,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Medium
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(120.dp))
@@ -88,8 +86,7 @@ fun AuthButton(text: String, gradient: Brush, onClick: () -> Unit) {
             Text(
                 text = text,
                 color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleLarge
             )
         }
     }

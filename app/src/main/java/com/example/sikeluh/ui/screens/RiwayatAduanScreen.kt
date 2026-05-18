@@ -32,7 +32,7 @@ fun RiwayatAduanScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Riwayat Aduan", fontWeight = FontWeight.Bold, color = PrimaryTeal) },
+                title = { Text("Riwayat Aduan", style = MaterialTheme.typography.titleLarge, color = PrimaryTeal) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -48,8 +48,8 @@ fun RiwayatAduanScreen(navController: NavController) {
         ) {
             item {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Riwayat Aduan Saya", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-                Text("Pantau status laporan yang telah Anda kirimkan.", color = Color.Gray, fontSize = 14.sp)
+                Text("Riwayat Aduan Saya", style = MaterialTheme.typography.displaySmall)
+                Text("Pantau status laporan yang telah Anda kirimkan.", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
             }
 
             item {
@@ -139,11 +139,10 @@ fun AduanItemCard(
                     Text(
                         statusText,
                         color = statusColor,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
-                Text(idAduan, color = Color.Gray, fontSize = 12.sp)
+                Text(idAduan, color = Color.Gray, style = MaterialTheme.typography.labelSmall)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -151,15 +150,13 @@ fun AduanItemCard(
             // Judul dan Deskripsi
             Text(
                 title,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                lineHeight = 24.sp
+                style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 description,
                 color = Color.DarkGray,
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.bodySmall,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
@@ -174,7 +171,7 @@ fun AduanItemCard(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(date, color = Color.DarkGray, fontSize = 14.sp)
+                Text(date, color = Color.DarkGray, style = MaterialTheme.typography.labelSmall)
             }
         }
     }
