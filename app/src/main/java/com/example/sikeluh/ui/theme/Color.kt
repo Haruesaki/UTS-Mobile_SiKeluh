@@ -43,3 +43,7 @@ val AuthDaftarGradientStart = Color(0xFF72B01D)
 val AuthDaftarGradientEnd = Color(0xFF3F7D20)
 val AuthSubmitGradientStart = Color(0xFF003D3B)
 val AuthSubmitGradientEnd = Color(0xFF002221)
+
+// Profile Colors
+val LogoutRed = Color(0xFFA93226)
+val SectionHeaderBg = Color(0xFF2D4653)

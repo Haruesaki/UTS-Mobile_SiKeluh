@@ -29,6 +29,7 @@ class MainActivity : ComponentActivity() {
                     composable("form") { FormAduanScreen(navController) }
                     composable("riwayat") { RiwayatAduanScreen(navController) }
                     composable("notif") { NotifikasiScreen(navController) }
+                    composable("profile") { ProfileScreen(navController) }
 
                     // Rute dengan parameter status
                     composable(

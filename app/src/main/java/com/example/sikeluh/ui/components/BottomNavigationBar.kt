@@ -81,7 +81,15 @@ fun BottomNavigationBar(navController: NavController) {
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
             label = { Text("Profile", style = MaterialTheme.typography.labelSmall) },
             selected = currentRoute == "profile",
-            onClick = { /* TODO */ },
+            onClick = {
+                if (currentRoute != "profile") {
+                    navController.navigate("profile") {
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            },
             colors = navItemColors
         )
     }
