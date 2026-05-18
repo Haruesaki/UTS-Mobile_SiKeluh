@@ -33,3 +33,13 @@ val GradientStart = Color(0xFF4ADE80)
 val GradientEnd = Color(0xFF0D9488)
 val InstansiBg = Color(0xFFF1F5F9)
 val DarkNavy = Color(0xFF0F172A)
+
+// Auth Colors
+val AuthBg = Color(0xFF134E48)
+val AuthFieldBg = Color(0xFFD9D9D9)
+val AuthMasukGradientStart = Color(0xFF1CB58F)
+val AuthMasukGradientEnd = Color(0xFF0D9488)
+val AuthDaftarGradientStart = Color(0xFF72B01D)
+val AuthDaftarGradientEnd = Color(0xFF3F7D20)
+val AuthSubmitGradientStart = Color(0xFF003D3B)
+val AuthSubmitGradientEnd = Color(0xFF002221)

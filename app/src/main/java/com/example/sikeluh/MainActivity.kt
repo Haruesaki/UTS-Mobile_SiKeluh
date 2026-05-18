@@ -10,11 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.sikeluh.ui.theme.SiKeluhTheme
-import com.example.sikeluh.ui.screens.FormAduanScreen
-import com.example.sikeluh.ui.screens.HomeScreen
-import com.example.sikeluh.ui.screens.NotifikasiScreen
-import com.example.sikeluh.ui.screens.RiwayatAduanScreen
-import com.example.sikeluh.ui.screens.StatusAduanScreen
+import com.example.sikeluh.ui.screens.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,11 +20,16 @@ class MainActivity : ComponentActivity() {
             SiKeluhTheme {
                 val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = "home") {
+                NavHost(navController = navController, startDestination = "welcome") {
+                    composable("welcome") { WelcomeScreen(navController) }
+                    composable("login") { LoginScreen(navController) }
+                    composable("register") { RegisterScreen(navController) }
+                    
                     composable("home") { HomeScreen(navController) }
                     composable("form") { FormAduanScreen(navController) }
                     composable("riwayat") { RiwayatAduanScreen(navController) }
                     composable("notif") { NotifikasiScreen(navController) }
+
                     // Rute dengan parameter status
                     composable(
                         route = "status/{status}",
