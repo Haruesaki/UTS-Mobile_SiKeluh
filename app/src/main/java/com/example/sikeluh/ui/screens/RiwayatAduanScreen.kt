@@ -1,4 +1,4 @@
-package com.example.sikeluh.view
+package com.example.sikeluh.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -23,7 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.example.sikeluh.ui.theme.SiKeluhTheme
+import com.example.sikeluh.ui.components.BottomNavigationBar
+import com.example.sikeluh.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +32,7 @@ fun RiwayatAduanScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Riwayat Aduan", fontWeight = FontWeight.Bold, color = Color(0xFF198786)) },
+                title = { Text("Riwayat Aduan", fontWeight = FontWeight.Bold, color = PrimaryTeal) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -55,8 +56,8 @@ fun RiwayatAduanScreen(navController: NavController) {
                 AduanItemCard(
                     navController = navController,
                     statusText = "Dalam Proses",
-                    statusColor = Color(0xFF1E3A8A),
-                    statusBgColor = Color(0xFFDBEAFE),
+                    statusColor = StatusProsesText,
+                    statusBgColor = StatusProsesBg,
                     idAduan = "#ADU-2023-089",
                     title = "Jalan Rusak di Jl. Merdeka Selatan",
                     description = "Terdapat lubang besar yang membahayakan pengendara motor, terutama saat malam hari...",
@@ -68,8 +69,8 @@ fun RiwayatAduanScreen(navController: NavController) {
                 AduanItemCard(
                     navController = navController,
                     statusText = "Selesai",
-                    statusColor = Color(0xFF065F46),
-                    statusBgColor = Color(0xFFD1FAE5),
+                    statusColor = StatusSelesaiText,
+                    statusBgColor = StatusSelesaiBg,
                     idAduan = "#ADU-2023-042",
                     title = "Lampu Jalan Mati",
                     description = "Lampu jalan di sekitar perumahan mati sudah 3 hari...",
@@ -81,8 +82,8 @@ fun RiwayatAduanScreen(navController: NavController) {
                 AduanItemCard(
                     navController = navController,
                     statusText = "Menunggu Verifikasi",
-                    statusColor = Color(0xFF991B1B),
-                    statusBgColor = Color(0xFFFEE2E2),
+                    statusColor = StatusMenungguText,
+                    statusBgColor = StatusMenungguBg,
                     idAduan = "#ADU-2023-102",
                     title = "Tumpukan Sampah Liar",
                     description = "Bau menyengat dan mengganggu aktivitas warga sekitar...",
@@ -116,7 +117,7 @@ fun AduanItemCard(
             }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            // Header: Status Badge dan ID Aduan
+            // Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -167,7 +168,7 @@ fun AduanItemCard(
             HorizontalDivider(color = Color.LightGray, thickness = 0.5.dp)
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Footer: Hanya Tanggal
+            // Footer
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,

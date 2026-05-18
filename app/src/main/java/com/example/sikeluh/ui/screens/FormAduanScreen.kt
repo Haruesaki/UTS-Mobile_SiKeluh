@@ -1,4 +1,4 @@
-package com.example.sikeluh.view
+package com.example.sikeluh.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -7,6 +7,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -19,7 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.example.sikeluh.ui.theme.SiKeluhTheme
+import com.example.sikeluh.ui.components.BottomNavigationBar
+import com.example.sikeluh.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,10 +30,10 @@ fun FormAduanScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Form Aduan", fontWeight = FontWeight.Bold, color = Color(0xFF198786)) },
+                title = { Text("Form Aduan", fontWeight = FontWeight.Bold, color = PrimaryTeal) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -92,9 +95,9 @@ fun FormAduanScreen(navController: NavController) {
             Button(
                 onClick = { },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1CB58F))
+                colors = ButtonDefaults.buttonColors(containerColor = AccentGreen)
             ) {
-                Icon(Icons.Default.Send, null)
+                Icon(Icons.AutoMirrored.Filled.Send, null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Kirim Aduan", fontSize = 16.sp)
             }

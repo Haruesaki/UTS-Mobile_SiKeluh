@@ -1,4 +1,4 @@
-package com.example.sikeluh.view
+package com.example.sikeluh.ui.screens
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -24,7 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.sikeluh.ui.theme.SiKeluhTheme
+import com.example.sikeluh.ui.components.BottomNavigationBar
+import com.example.sikeluh.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,10 +33,10 @@ fun StatusAduanScreen(navController: NavController, status: String) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Status Aduan", fontWeight = FontWeight.Bold, color = Color(0xFF198786)) },
+                title = { Text("Status Aduan", fontWeight = FontWeight.Bold, color = PrimaryTeal) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color(0xFF198786))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = PrimaryTeal)
                     }
                 }
             )
@@ -75,9 +76,9 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.Chat, contentDescription = null, tint = Color(0xFF1E3A8A), modifier = Modifier.size(20.dp))
+                            Icon(Icons.Default.Chat, contentDescription = null, tint = StatusProsesText, modifier = Modifier.size(20.dp))
                             Spacer(modifier = Modifier.width(12.dp))
-                            Text("Catatan Instansi", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color(0xFF1E3A8A))
+                            Text("Catatan Instansi", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = StatusProsesText)
                         }
                         
                         Spacer(modifier = Modifier.height(16.dp))
@@ -85,7 +86,7 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFFF1F5F9), RoundedCornerShape(8.dp))
+                                .background(InstansiBg, RoundedCornerShape(8.dp))
                                 .padding(16.dp)
                         ) {
                             Column {
@@ -176,7 +177,7 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                             .fillMaxSize()
                             .background(
                                 brush = Brush.horizontalGradient(
-                                    colors = listOf(Color(0xFF4ADE80), Color(0xFF0D9488))
+                                    colors = listOf(GradientStart, GradientEnd)
                                 )
                             ),
                         contentAlignment = Alignment.Center
@@ -210,13 +211,13 @@ fun StatusStepItem(
                     .clip(CircleShape)
                     .background(
                         when {
-                            isCompleted -> Color(0xFF0F172A)
+                            isCompleted -> DarkNavy
                             isActive -> Color.White
                             else -> Color.White
                         }
                     )
                     .then(
-                        if (isActive) Modifier.background(Color.White).padding(2.dp).clip(CircleShape).background(Color(0xFF0F172A)).padding(2.dp).clip(CircleShape).background(Color.White)
+                        if (isActive) Modifier.background(Color.White).padding(2.dp).clip(CircleShape).background(DarkNavy).padding(2.dp).clip(CircleShape).background(Color.White)
                         else if (!isCompleted) Modifier.background(Color.White).padding(2.dp).clip(CircleShape).background(Color.LightGray).padding(2.dp).clip(CircleShape).background(Color.White)
                         else Modifier
                     ),
@@ -225,7 +226,7 @@ fun StatusStepItem(
                 if (isCompleted) {
                     Icon(Icons.Default.Check, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                 } else if (isActive) {
-                    Box(modifier = Modifier.size(10.dp).clip(CircleShape).background(Color(0xFF0F172A)))
+                    Box(modifier = Modifier.size(10.dp).clip(CircleShape).background(DarkNavy))
                 }
             }
             if (showLine) {
@@ -247,7 +248,7 @@ fun StatusStepItem(
                 text = title,
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
-                color = if (isCompleted || isActive) Color(0xFF0F172A) else Color.Gray
+                color = if (isCompleted || isActive) DarkNavy else Color.Gray
             )
             Text(
                 text = time,

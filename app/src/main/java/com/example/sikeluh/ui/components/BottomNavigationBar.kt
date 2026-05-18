@@ -1,4 +1,4 @@
-package com.example.sikeluh.view
+package com.example.sikeluh.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -17,25 +17,23 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
-import com.example.sikeluh.ui.theme.SiKeluhTheme
+import com.example.sikeluh.ui.theme.*
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    // Mendapatkan rute aktif saat ini
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     NavigationBar(
-        containerColor = Color(0xFF2D4653)
+        containerColor = PrimaryDark
     ) {
         val navItemColors = NavigationBarItemDefaults.colors(
             selectedIconColor = Color.White,
             selectedTextColor = Color.White,
-            unselectedIconColor = Color.Gray, // Warna lebih pudar jika tidak aktif
+            unselectedIconColor = Color.Gray,
             unselectedTextColor = Color.Gray,
-            // Memberikan warna frame (pill background) saat tab terpilih
-            indicatorColor = Color(0xFF1CB58F)
+            // Memberikan warna frame saat tab terpilih
+            indicatorColor = AccentGreen
         )
 
         NavigationBarItem(
@@ -45,7 +43,6 @@ fun BottomNavigationBar(navController: NavController) {
             onClick = {
                 if (currentRoute != "home") {
                     navController.navigate("home") {
-                        // Menghindari penumpukan layar (stack)
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
                         restoreState = true
@@ -73,7 +70,15 @@ fun BottomNavigationBar(navController: NavController) {
             icon = { Icon(Icons.Default.Notifications, contentDescription = "Notification") },
             label = { Text("Notification") },
             selected = currentRoute == "notif",
-            onClick = { /* TODO */ },
+            onClick = {
+                if (currentRoute != "notif") {
+                    navController.navigate("notif") {
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            },
             colors = navItemColors
         )
         NavigationBarItem(

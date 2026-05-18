@@ -10,10 +10,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.sikeluh.ui.theme.SiKeluhTheme
-import com.example.sikeluh.view.FormAduanScreen
-import com.example.sikeluh.view.HomeScreen
-import com.example.sikeluh.view.RiwayatAduanScreen
-import com.example.sikeluh.view.StatusAduanScreen
+import com.example.sikeluh.ui.screens.FormAduanScreen
+import com.example.sikeluh.ui.screens.HomeScreen
+import com.example.sikeluh.ui.screens.NotifikasiScreen
+import com.example.sikeluh.ui.screens.RiwayatAduanScreen
+import com.example.sikeluh.ui.screens.StatusAduanScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +28,7 @@ class MainActivity : ComponentActivity() {
                     composable("home") { HomeScreen(navController) }
                     composable("form") { FormAduanScreen(navController) }
                     composable("riwayat") { RiwayatAduanScreen(navController) }
+                    composable("notif") { NotifikasiScreen(navController) }
                     // Rute dengan parameter status
                     composable(
                         route = "status/{status}",

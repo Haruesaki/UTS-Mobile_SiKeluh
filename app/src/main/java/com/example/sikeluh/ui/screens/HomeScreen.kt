@@ -1,4 +1,4 @@
-package com.example.sikeluh.view
+package com.example.sikeluh.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,7 +25,8 @@ import androidx.navigation.NavController
 import com.example.sikeluh.R
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.example.sikeluh.ui.theme.SiKeluhTheme
+import com.example.sikeluh.ui.components.BottomNavigationBar
+import com.example.sikeluh.ui.theme.*
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -70,7 +71,7 @@ fun HomeScreen(navController: NavController) {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth().height(160.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2D4653)),
+                    colors = CardDefaults.cardColors(containerColor = PrimaryDark),
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Row(
@@ -87,7 +88,7 @@ fun HomeScreen(navController: NavController) {
                             Spacer(modifier = Modifier.weight(1f))
                             Button(
                                 onClick = { navController.navigate("form") },
-                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1CB58F))
+                                colors = ButtonDefaults.buttonColors(containerColor = AccentGreen)
                             ) {
                                 Text("Buat Aduan Baru", fontSize = 12.sp)
                                 Icon(Icons.Default.ArrowForward, null, Modifier.padding(start = 4.dp).size(16.dp))
@@ -104,12 +105,12 @@ fun HomeScreen(navController: NavController) {
 
             item { SectionTitle(title = "Aduan Terbaru") }
             item {
-                AduanCardPlaceholder("Jalan Rusak", "Dalam Proses", Color(0xFF81C784), R.drawable.jalanrusak)
+                AduanCardPlaceholder("Jalan Rusak", "Dalam Proses", AduanProses, R.drawable.jalanrusak)
             }
 
             item { SectionTitle(title = "Jelajahi Aduan") }
             item {
-                AduanCardPlaceholder("Jalan Rusak", "Selesai", Color(0xFFAED581), R.drawable.jalanbagus)
+                AduanCardPlaceholder("Jalan Rusak", "Selesai", AduanSelesai, R.drawable.jalanbagus)
             }
 
             item { Text("Kategori Aduan", fontWeight = FontWeight.Bold, fontSize = 18.sp) }
@@ -136,7 +137,7 @@ fun SectionTitle(title: String) {
 
 @Composable
 fun AduanCardPlaceholder(title: String, status: String, statusColor: Color, imageResId: Int) {
-    Card(modifier = Modifier.fillMaxWidth().height(100.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFF2D4653))) {
+    Card(modifier = Modifier.fillMaxWidth().height(100.dp), colors = CardDefaults.cardColors(containerColor = PrimaryDark)) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(id = imageResId),
@@ -159,7 +160,7 @@ fun AduanCardPlaceholder(title: String, status: String, statusColor: Color, imag
 @Composable
 fun CategoryIcon(icon: ImageVector, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(modifier = Modifier.size(60.dp).background(Color(0xFF2D4653), RoundedCornerShape(12.dp)), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier.size(60.dp).background(PrimaryDark, RoundedCornerShape(12.dp)), contentAlignment = Alignment.Center) {
             Icon(icon, null, tint = Color.White)
         }
         Text(label, fontSize = 10.sp, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 4.dp))
