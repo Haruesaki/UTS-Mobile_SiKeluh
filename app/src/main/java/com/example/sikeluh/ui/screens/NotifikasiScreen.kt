@@ -26,24 +26,24 @@ import com.example.sikeluh.ui.theme.*
 fun NotifikasiScreen(navController: NavController) {
     val notifications = listOf(
         NotificationItem(
-            "Status Aduan Diperbarui",
-            "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
-            "2 jam yang lalu"
+            title = "Status Aduan Diperbarui",
+            description = "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
+            createdAt = "2 jam yang lalu"
         ),
         NotificationItem(
-            "Status Aduan Diperbarui",
-            "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
-            "2 jam yang lalu"
+            title = "Status Aduan Diperbarui",
+            description = "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
+            createdAt = "2 jam yang lalu"
         ),
         NotificationItem(
-            "Status Aduan Diperbarui",
-            "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
-            "2 jam yang lalu"
+            title = "Status Aduan Diperbarui",
+            description = "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
+            createdAt = "2 jam yang lalu"
         ),
         NotificationItem(
-            "Status Aduan Diperbarui",
-            "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
-            "2 jam yang lalu"
+            title = "Status Aduan Diperbarui",
+            description = "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
+            createdAt = "2 jam yang lalu"
         )
     )
 

@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sikeluh.ui.theme.*
@@ -31,6 +30,9 @@ fun AuthTextField(
         placeholder = { Text(placeholder, color = Color.Gray) },
         shape = RoundedCornerShape(12.dp),
         colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
+            disabledTextColor = Color.Black,
             focusedContainerColor = AuthFieldBg,
             unfocusedContainerColor = AuthFieldBg,
             disabledContainerColor = AuthFieldBg,
@@ -43,9 +45,10 @@ fun AuthTextField(
 }
 
 @Composable
-fun AuthSubmitButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun AuthSubmitButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = modifier
             .width(200.dp)
             .height(50.dp),

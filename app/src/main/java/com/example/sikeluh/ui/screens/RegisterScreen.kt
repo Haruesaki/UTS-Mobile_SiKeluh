@@ -1,32 +1,45 @@
 package com.example.sikeluh.ui.screens
 
-import androidx.compose.foundation.background
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sikeluh.R
 import com.example.sikeluh.ui.components.*
 import com.example.sikeluh.ui.theme.*
+import com.example.sikeluh.viewmodel.AuthViewModel
 
 @Composable
-fun RegisterScreen(navController: NavController) {
+fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = viewModel()) {
+    val context = LocalContext.current
     var namaLengkap by remember { mutableStateOf("") }
     var nik by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var agreeTerms by remember { mutableStateOf(false) }
+
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    // Show error message when it changes
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -102,11 +115,25 @@ fun RegisterScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(32.dp))
 
         // Created Account Button
-        AuthSubmitButton(
-            text = "Created Account",
-            onClick = { navController.navigate("home") },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                color = Color.White
+            )
+        } else {
+            AuthSubmitButton(
+                text = "Created Account",
+                enabled = !isLoading,
+                onClick = { 
+                    viewModel.register(nik, password, namaLengkap, agreeTerms) {
+                        navController.navigate("home") {
+                            popUpTo("welcome") { inclusive = true }
+                        }
+                    }
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
     }
 }
 

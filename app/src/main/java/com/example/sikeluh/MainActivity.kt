@@ -30,6 +30,7 @@ class MainActivity : ComponentActivity() {
                     composable("riwayat") { RiwayatAduanScreen(navController) }
                     composable("notif") { NotifikasiScreen(navController) }
                     composable("profile") { ProfileScreen(navController) }
+                    composable("map_selection") { MapSelectionScreen(navController) }
 
                     // Rute dengan parameter status
                     composable(
