@@ -5,30 +5,42 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.sikeluh.model.Aduan
 import com.example.sikeluh.ui.components.BottomNavigationBar
 import com.example.sikeluh.ui.theme.*
+import com.example.sikeluh.viewmodel.AduanViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RiwayatAduanScreen(navController: NavController) {
+fun RiwayatAduanScreen(navController: NavController, viewModel: AduanViewModel = viewModel()) {
+    val aduans by viewModel.aduans.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchAduans()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -52,59 +64,39 @@ fun RiwayatAduanScreen(navController: NavController) {
                 Text("Pantau status laporan yang telah Anda kirimkan.", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
             }
 
-            item {
-                AduanItemCard(
-                    navController = navController,
-                    statusText = "Dalam Proses",
-                    statusColor = StatusProsesText,
-                    statusBgColor = StatusProsesBg,
-                    idAduan = "#ADU-2023-089",
-                    title = "Jalan Rusak di Jl. Merdeka Selatan",
-                    description = "Terdapat lubang besar yang membahayakan pengendara motor, terutama saat malam hari...",
-                    date = "12 Okt 2023"
-                )
+            if (aduans.isEmpty()) {
+                item {
+                    Text(
+                        "Anda belum memiliki riwayat aduan",
+                        modifier = Modifier.fillMaxWidth().padding(top = 40.dp),
+                        textAlign = TextAlign.Center,
+                        color = Color.Gray
+                    )
+                }
+            } else {
+                items(aduans) { aduan ->
+                    AduanItemCardReal(aduan, navController)
+                }
             }
-
-            item {
-                AduanItemCard(
-                    navController = navController,
-                    statusText = "Selesai",
-                    statusColor = StatusSelesaiText,
-                    statusBgColor = StatusSelesaiBg,
-                    idAduan = "#ADU-2023-042",
-                    title = "Lampu Jalan Mati",
-                    description = "Lampu jalan di sekitar perumahan mati sudah 3 hari...",
-                    date = "05 Sep 2023"
-                )
-            }
-
-            item {
-                AduanItemCard(
-                    navController = navController,
-                    statusText = "Menunggu Verifikasi",
-                    statusColor = StatusMenungguText,
-                    statusBgColor = StatusMenungguBg,
-                    idAduan = "#ADU-2023-102",
-                    title = "Tumpukan Sampah Liar",
-                    description = "Bau menyengat dan mengganggu aktivitas warga sekitar...",
-                    date = "24 Okt 2023"
-                )
-            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
         }
     }
 }
 
 @Composable
-fun AduanItemCard(
-    navController: NavController,
-    statusText: String,
-    statusColor: Color,
-    statusBgColor: Color,
-    idAduan: String,
-    title: String,
-    description: String,
-    date: String
-) {
+fun AduanItemCardReal(aduan: Aduan, navController: NavController) {
+    val statusColor = when (aduan.status) {
+        "Selesai" -> StatusSelesaiText
+        "Dalam Proses" -> StatusProsesText
+        else -> StatusMenungguText
+    }
+    
+    val statusBgColor = when (aduan.status) {
+        "Selesai" -> StatusSelesaiBg
+        "Dalam Proses" -> StatusProsesBg
+        else -> StatusMenungguBg
+    }
+
     Card(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = BorderStroke(1.dp, Color.LightGray),
@@ -112,8 +104,7 @@ fun AduanItemCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                // Navigasi ke rute status dengan parameter statusText
-                navController.navigate("status/$statusText")
+                navController.navigate("status/${aduan.status}")
             }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -137,24 +128,24 @@ fun AduanItemCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        statusText,
+                        aduan.status ?: "Menunggu Verifikasi",
                         color = statusColor,
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
-                Text(idAduan, color = Color.Gray, style = MaterialTheme.typography.labelSmall)
+                Text(aduan.id?.takeLast(8) ?: "#UNKNOWN", color = Color.Gray, style = MaterialTheme.typography.labelSmall)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             // Judul dan Deskripsi
             Text(
-                title,
+                aduan.kategoriKeluhan,
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                description,
+                aduan.deskripsiKeluhan,
                 color = Color.DarkGray,
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 2,
@@ -171,7 +162,14 @@ fun AduanItemCard(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(date, color = Color.DarkGray, style = MaterialTheme.typography.labelSmall)
+                Text(aduan.createdAt?.take(10) ?: "Baru saja", color = Color.DarkGray, style = MaterialTheme.typography.labelSmall)
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = Color.Gray,
+                    modifier = Modifier.size(16.dp)
+                )
             }
         }
     }

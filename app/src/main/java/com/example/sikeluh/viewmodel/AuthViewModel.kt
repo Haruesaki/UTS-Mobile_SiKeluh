@@ -1,15 +1,19 @@
 package com.example.sikeluh.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sikeluh.data.local.SessionManager
 import com.example.sikeluh.data.repository.AuthRepository
 import com.example.sikeluh.model.UserProfile
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = AuthRepository()
+    private val sessionManager = SessionManager(application)
     
     private val _currentUser = MutableStateFlow<UserProfile?>(null)
     val currentUser: StateFlow<UserProfile?> = _currentUser
@@ -19,6 +23,33 @@ class AuthViewModel : ViewModel() {
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
+
+    private val _isLoggedIn = MutableStateFlow<Boolean?>(null) // null means still checking
+    val isLoggedIn: StateFlow<Boolean?> = _isLoggedIn
+
+    init {
+        checkSession()
+    }
+
+    private fun checkSession() {
+        viewModelScope.launch {
+            val nik = sessionManager.getSession().first()
+            if (nik != null) {
+                try {
+                    // Fetch profile from database using NIK
+                    // Note: AuthRepository.signIn currently sets currentUserProfile
+                    // We might need a direct way to fetch by NIK if session is found.
+                    // For now, let's assume we can re-verify or just set the NIK.
+                    // Since it's a custom auth, we'll just check if nik exists.
+                    _isLoggedIn.value = true
+                } catch (e: Exception) {
+                    _isLoggedIn.value = false
+                }
+            } else {
+                _isLoggedIn.value = false
+            }
+        }
+    }
 
     fun login(nik: String, pass: String, onSuccess: () -> Unit) {
         if (nik.isBlank() || pass.isBlank()) {
@@ -31,7 +62,9 @@ class AuthViewModel : ViewModel() {
             _error.value = null
             try {
                 val profile = repository.signIn(nik, pass)
+                sessionManager.saveSession(nik) // Save NIK to DataStore
                 _currentUser.value = profile
+                _isLoggedIn.value = true
                 onSuccess()
             } catch (e: Exception) {
                 _error.value = e.message ?: "Login Gagal"
@@ -64,7 +97,9 @@ class AuthViewModel : ViewModel() {
             _error.value = null
             try {
                 val profile = repository.signUp(nik, pass, nama)
+                sessionManager.saveSession(nik) // Save NIK to DataStore
                 _currentUser.value = profile
+                _isLoggedIn.value = true
                 onSuccess()
             } catch (e: Exception) {
                 _error.value = e.message ?: "Pendaftaran Gagal"
@@ -77,8 +112,10 @@ class AuthViewModel : ViewModel() {
     fun logout(onSuccess: () -> Unit) {
         viewModelScope.launch {
             try {
+                sessionManager.clearSession() // Clear DataStore
                 repository.signOut()
                 _currentUser.value = null
+                _isLoggedIn.value = false
                 onSuccess()
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -18,17 +19,31 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sikeluh.R
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.clickable
 import androidx.navigation.compose.rememberNavController
 import com.example.sikeluh.ui.components.BottomNavigationBar
 import com.example.sikeluh.ui.theme.*
+import com.example.sikeluh.viewmodel.AduanViewModel
+import com.example.sikeluh.model.Aduan
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, viewModel: AduanViewModel = viewModel()) {
+    val aduans by viewModel.aduans.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchAduans()
+    }
+
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
@@ -102,13 +117,32 @@ fun HomeScreen(navController: NavController) {
             }
 
             item { SectionTitle(title = "Aduan Terbaru") }
-            item {
-                AduanCardPlaceholder("Jalan Rusak", "Dalam Proses", AduanProses, R.drawable.jalanrusak)
+            if (aduans.isEmpty()) {
+                item {
+                    Text(
+                        "Belum ada aduan terbaru",
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        textAlign = TextAlign.Center,
+                        color = Color.Gray
+                    )
+                }
+            } else {
+                val latestAduans = aduans.take(3)
+                items(latestAduans) { aduan ->
+                    AduanCardReal(aduan, navController)
+                }
             }
 
             item { SectionTitle(title = "Jelajahi Aduan") }
-            item {
-                AduanCardPlaceholder("Jalan Rusak", "Selesai", AduanSelesai, R.drawable.jalanbagus)
+            if (aduans.size > 3) {
+                val moreAduans = aduans.drop(3)
+                items(moreAduans) { aduan ->
+                    AduanCardReal(aduan, navController)
+                }
+            } else {
+                item {
+                    AduanCardPlaceholder("Jalan Rusak", "Selesai", AduanSelesai, R.drawable.jalanbagus)
+                }
             }
 
             item { Text("Kategori Aduan", style = MaterialTheme.typography.titleLarge) }
@@ -130,6 +164,58 @@ fun SectionTitle(title: String) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
         Text(title, style = MaterialTheme.typography.titleLarge)
         Text("Lihat Semua ->", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+    }
+}
+
+@Composable
+fun AduanCardReal(aduan: Aduan, navController: NavController) {
+    val statusColor = when (aduan.status) {
+        "Selesai" -> AduanSelesai
+        else -> AduanProses
+    }
+    
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .clickable { navController.navigate("status/${aduan.status}") }, 
+        colors = CardDefaults.cardColors(containerColor = PrimaryDark)
+    ) {
+        Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            // Use placeholder image if no URL
+            Image(
+                painter = painterResource(id = R.drawable.jalanrusak),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(76.dp).clip(RoundedCornerShape(8.dp))
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Card(colors = CardDefaults.cardColors(containerColor = statusColor)) {
+                    Text(
+                        aduan.status ?: "Menunggu Verifikasi", 
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), 
+                        style = MaterialTheme.typography.labelSmall, 
+                        color = Color.DarkGray
+                    )
+                }
+                Text(
+                    aduan.kategoriKeluhan, 
+                    color = Color.White, 
+                    style = MaterialTheme.typography.titleMedium, 
+                    modifier = Modifier.padding(top = 4.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    aduan.lokasiAduan ?: "Lokasi tidak tersedia", 
+                    color = Color.LightGray, 
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
     }
 }
 

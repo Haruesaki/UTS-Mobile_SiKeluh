@@ -3,6 +3,7 @@ package com.example.sikeluh.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,20 +16,29 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.sikeluh.ui.components.BottomNavigationBar
 import com.example.sikeluh.ui.theme.*
 import com.example.sikeluh.viewmodel.AduanViewModel
 import com.example.sikeluh.model.Aduan
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormAduanScreen(navController: NavController, viewModel: AduanViewModel = viewModel()) {
     val context = LocalContext.current
+    
+    // Initialize OSMdroid configuration
+    org.osmdroid.config.Configuration.getInstance().userAgentValue = context.packageName
     
     // Form State
     var kategori by remember { mutableStateOf("") }
@@ -38,12 +48,18 @@ fun FormAduanScreen(navController: NavController, viewModel: AduanViewModel = vi
     var kecamatan by remember { mutableStateOf("") }
     var latitude by remember { mutableStateOf<Double?>(null) }
     var longitude by remember { mutableStateOf<Double?>(null) }
+    var alamatLengkap by remember { mutableStateOf("") }
 
     // Observe result from MapSelectionScreen
     val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
     LaunchedEffect(savedStateHandle) {
         savedStateHandle?.getLiveData<Double>("lat")?.observeForever { latitude = it }
         savedStateHandle?.getLiveData<Double>("lng")?.observeForever { longitude = it }
+        savedStateHandle?.getLiveData<String>("address")?.observeForever { alamatLengkap = it }
+        // Auto-fill address components
+        savedStateHandle?.getLiveData<String>("provinsi")?.observeForever { provinsi = it }
+        savedStateHandle?.getLiveData<String>("kota")?.observeForever { kota = it }
+        savedStateHandle?.getLiveData<String>("kecamatan")?.observeForever { kecamatan = it }
     }
 
     Scaffold(
@@ -121,20 +137,65 @@ fun FormAduanScreen(navController: NavController, viewModel: AduanViewModel = vi
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Text("Lokasi Aduan", style = MaterialTheme.typography.titleMedium)
                     
-                    // Display selected location or confirmation status
-                    val locationText = if ((latitude != null) && (longitude != null)) {
-                        "Lokasi Terpilih: $latitude, $longitude"
-                    } else {
-                        "Pilih Lokasi"
-                    }
-
-                    Box(modifier = Modifier.fillMaxWidth().height(150.dp).border(1.dp, Color.Gray, RoundedCornerShape(8.dp)), contentAlignment = Alignment.Center) {
-                        Button(
-                            onClick = { navController.navigate("map_selection") }, 
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black)
+                    if (latitude != null && longitude != null) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(180.dp)
+                                .clip(RoundedCornerShape(8.dp))
+                                .border(BorderStroke(1.dp, Color.LightGray), RoundedCornerShape(8.dp))
                         ) {
-                            Icon(Icons.Default.LocationOn, null)
-                            Text(locationText, style = MaterialTheme.typography.labelMedium)
+                            AndroidView(
+                                factory = { ctx ->
+                                    MapView(ctx).apply {
+                                        setTileSource(TileSourceFactory.MAPNIK)
+                                        setMultiTouchControls(false)
+                                        controller.setZoom(15.0)
+                                        controller.setCenter(GeoPoint(latitude!!, longitude!!))
+                                        
+                                        // Add a marker to show the selected point
+                                        val marker = org.osmdroid.views.overlay.Marker(this)
+                                        marker.position = GeoPoint(latitude!!, longitude!!)
+                                        marker.setAnchor(org.osmdroid.views.overlay.Marker.ANCHOR_CENTER, org.osmdroid.views.overlay.Marker.ANCHOR_BOTTOM)
+                                        overlays.add(marker)
+                                    }
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            // Clickable overlay
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clickable { navController.navigate("map_selection") }
+                            )
+                        }
+                        Text(
+                            text = alamatLengkap,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                        Text(
+                            text = "Klik peta untuk mengubah lokasi",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Gray
+                        )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Button(
+                                onClick = { navController.navigate("map_selection") }, 
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black)
+                            ) {
+                                Icon(Icons.Default.LocationOn, null)
+                                Text("Pilih Lokasi", style = MaterialTheme.typography.labelMedium)
+                            }
                         }
                     }
                     
@@ -177,13 +238,13 @@ fun FormAduanScreen(navController: NavController, viewModel: AduanViewModel = vi
 
             Button(
                 onClick = {
-                    if (kategori.isBlank() || deskripsi.isBlank() || (latitude == null)) {
+                    if (kategori.isBlank() || deskripsi.isBlank() || (latitude == null) || (longitude == null)) {
                         Toast.makeText(context, "Mohon lengkapi data dan pilih lokasi", Toast.LENGTH_SHORT).show()
                     } else {
                         val aduan = Aduan(
                             kategoriKeluhan = kategori,
                             deskripsiKeluhan = deskripsi,
-                            lokasiAduan = "$latitude, $longitude",
+                            lokasiAduan = alamatLengkap,
                             alamatProvinsi = provinsi,
                             alamatKota = kota,
                             alamatKecamatan = kecamatan,

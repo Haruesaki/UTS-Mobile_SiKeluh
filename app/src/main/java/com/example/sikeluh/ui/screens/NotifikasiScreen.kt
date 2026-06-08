@@ -15,37 +15,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.compose.rememberNavController
 import com.example.sikeluh.model.NotificationItem
 import com.example.sikeluh.ui.components.BottomNavigationBar
 import com.example.sikeluh.ui.theme.*
+import com.example.sikeluh.viewmodel.AuthViewModel
+import com.example.sikeluh.viewmodel.NotifikasiViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotifikasiScreen(navController: NavController) {
-    val notifications = listOf(
-        NotificationItem(
-            title = "Status Aduan Diperbarui",
-            description = "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
-            createdAt = "2 jam yang lalu"
-        ),
-        NotificationItem(
-            title = "Status Aduan Diperbarui",
-            description = "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
-            createdAt = "2 jam yang lalu"
-        ),
-        NotificationItem(
-            title = "Status Aduan Diperbarui",
-            description = "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
-            createdAt = "2 jam yang lalu"
-        ),
-        NotificationItem(
-            title = "Status Aduan Diperbarui",
-            description = "Aduan Anda Mengenai \"Jalan Berlubang di Jl. Merdeka\" telah diubah statusnya menjadi Dalam Pengerjaan",
-            createdAt = "2 jam yang lalu"
-        )
-    )
+fun NotifikasiScreen(
+    navController: NavController, 
+    viewModel: NotifikasiViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
+) {
+    val user by authViewModel.currentUser.collectAsState()
+    val notifications by viewModel.notifications.collectAsState()
+
+    LaunchedEffect(user) {
+        user?.id?.let { viewModel.fetchNotifications(it) }
+    }
 
     Scaffold(
         topBar = {

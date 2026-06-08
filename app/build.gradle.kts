@@ -60,6 +60,8 @@ dependencies {
 // Mesin HTTP Ktor (Wajib untuk Supabase SDK di Android)
     implementation("io.ktor:ktor-client-android:2.3.11")
     implementation("io.ktor:ktor-client-core:2.3.11")
+    // Jetpack DataStore
+    implementation("androidx.datastore:datastore-preferences:1.1.2")
     // OpenStreetMap (OSMDroid)
     implementation("org.osmdroid:osmdroid-android:6.1.18")
     testImplementation(libs.junit)
