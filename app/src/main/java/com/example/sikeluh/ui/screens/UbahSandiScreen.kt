@@ -52,13 +52,13 @@ fun ChangePasswordScreen(navController: NavController, viewModel: AuthViewModel 
     
     var currentPasswordError by remember { mutableStateOf<String?>(null) }
 
-    // Password Requirements Logic
+    // Logika Persyaratan Kata Sandi
     val isMinLengthMet = newPassword.length >= 8
     val hasNumber = newPassword.any { it.isDigit() }
     val hasSymbol = newPassword.any { !it.isLetterOrDigit() }
     val allRequirementsMet = isMinLengthMet && hasNumber && hasSymbol
 
-    // Strength Calculation
+    // Perhitungan Kekuatan
     val strengthScore = listOf(isMinLengthMet, hasNumber, hasSymbol).count { it }
     val strengthText = when {
         newPassword.isEmpty() -> ""
@@ -67,9 +67,9 @@ fun ChangePasswordScreen(navController: NavController, viewModel: AuthViewModel 
         else -> "Kuat"
     }
     val strengthColor = when {
-        strengthScore <= 1 -> Color(0xFFB71C1C) // Red
-        strengthScore == 2 -> Color(0xFFFBC02D) // Yellow/Orange
-        else -> AccentGreen // Green
+        strengthScore <= 1 -> Color(0xFFB71C1C) // Merah
+        strengthScore == 2 -> Color(0xFFFBC02D) // Kuning/Oranye
+        else -> AccentGreen // Hijau
     }
     val strengthProgress by animateFloatAsState(
         targetValue = if (newPassword.isEmpty()) 0f else strengthScore / 3f,
@@ -114,13 +114,13 @@ fun ChangePasswordScreen(navController: NavController, viewModel: AuthViewModel 
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Current Password
+            // Kata Sandi Saat Ini
             PasswordInputField(
                 label = "Kata Sandi Saat Ini",
                 value = currentPassword,
                 onValueChange = { 
                     currentPassword = it 
-                    currentPasswordError = null // Clear error when typing
+                    currentPasswordError = null // Hapus kesalahan saat mengetik
                 },
                 placeholder = "Masukkan kata sandi saat ini",
                 isVisible = currentPasswordVisible,
@@ -137,7 +137,7 @@ fun ChangePasswordScreen(navController: NavController, viewModel: AuthViewModel 
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // New Password
+            // Kata Sandi Baru
             PasswordInputField(
                 label = "Kata Sandi Baru",
                 value = newPassword,
@@ -149,7 +149,7 @@ fun ChangePasswordScreen(navController: NavController, viewModel: AuthViewModel 
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Password Strength Indicator
+            // Indikator Kekuatan Kata Sandi
             if (newPassword.isNotEmpty()) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -180,7 +180,7 @@ fun ChangePasswordScreen(navController: NavController, viewModel: AuthViewModel 
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Confirm Password
+            // Konfirmasi Kata Sandi
             PasswordInputField(
                 label = "Konfirmasi Kata Sandi Baru",
                 value = confirmPassword,
@@ -192,7 +192,7 @@ fun ChangePasswordScreen(navController: NavController, viewModel: AuthViewModel 
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Requirements Card
+            // Kartu Persyaratan
             Card(
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFF8FAFC)),
                 border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray.copy(alpha = 0.3f)),
@@ -215,7 +215,7 @@ fun ChangePasswordScreen(navController: NavController, viewModel: AuthViewModel 
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Submit Button
+            // Tombol Kirim
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally), color = PrimaryTeal)
             } else {

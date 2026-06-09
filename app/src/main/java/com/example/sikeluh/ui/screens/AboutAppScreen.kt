@@ -63,7 +63,7 @@ fun AboutAppScreen(navController: NavController) {
         ) {
             // App Logo
             Image(
-                painter = painterResource(id = R.drawable.logo_sikeluh),
+                painter = painterResource(id = R.drawable.logo_aplikasi),
                 contentDescription = "App Logo",
                 modifier = Modifier
                     .size(120.dp)

@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import java.util.UUID
 
 class AuthRepository {
-    // Shared state to simulate current user session since we're not using Supabase Auth
+    // State bersama untuk mensimulasikan sesi pengguna saat ini karena kita tidak menggunakan Supabase Auth
     private var currentUserProfile: UserProfile? = null
 
     suspend fun signUp(nik: String, password: String, namaLengkap: String): UserProfile = withContext(Dispatchers.IO) {
@@ -20,7 +20,7 @@ class AuthRepository {
         )
         
         try {
-            // Direct Insert into 'pengguna' table
+            // Masukkan langsung ke tabel 'pengguna'
             SupabaseClient.client.from("pengguna").insert(profile)
             currentUserProfile = profile
             profile
@@ -31,7 +31,7 @@ class AuthRepository {
 
     suspend fun signIn(nik: String, password: String): UserProfile = withContext(Dispatchers.IO) {
         try {
-            // Direct Query to match nik and password
+            // Kueri langsung untuk mencocokkan nik dan password
             val profile = SupabaseClient.client.from("pengguna")
                 .select {
                     filter {

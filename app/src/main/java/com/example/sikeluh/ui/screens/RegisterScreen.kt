@@ -3,8 +3,14 @@ package com.example.sikeluh.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,6 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +42,10 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = view
     var password by remember { mutableStateOf("") }
     var agreeTerms by remember { mutableStateOf(false) }
 
+    val isPasswordValid = password.length >= 8 &&
+            password.any { it.isDigit() } &&
+            password.any { !it.isLetterOrDigit() }
+
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
 
@@ -45,6 +60,7 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = view
         modifier = Modifier
             .fillMaxSize()
             .background(AuthBg)
+            .verticalScroll(rememberScrollState())
             .padding(24.dp),
         horizontalAlignment = Alignment.Start
     ) {
@@ -96,6 +112,17 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = view
             isPassword = true
         )
 
+        // Password requirements feedback
+        Column(modifier = Modifier.padding(top = 8.dp)) {
+            val lengthValid = password.length >= 8
+            val hasDigit = password.any { it.isDigit() }
+            val hasSymbol = password.any { !it.isLetterOrDigit() }
+
+            RegisterRequirementItem("Minimal 8 karakter", lengthValid)
+            RegisterRequirementItem("Mengandung setidaknya 1 angka", hasDigit)
+            RegisterRequirementItem("Mengandung setidaknya 1 simbol", hasSymbol)
+        }
+
         Spacer(modifier = Modifier.height(12.dp))
 
         // Terms & Conditions
@@ -123,7 +150,7 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = view
         } else {
             AuthSubmitButton(
                 text = "Created Account",
-                enabled = !isLoading,
+                enabled = !isLoading && isPasswordValid && agreeTerms,
                 onClick = { 
                     viewModel.register(nik, password, namaLengkap, agreeTerms) {
                         navController.navigate("home") {
@@ -134,6 +161,41 @@ fun RegisterScreen(navController: NavController, viewModel: AuthViewModel = view
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        // Login Link
+        Text(
+            text = buildAnnotatedString {
+                append("Already have an account? ")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline)) {
+                    append("Log In")
+                }
+            },
+            color = Color.White,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clickable { navController.navigate("login") }
+        )
+    }
+}
+
+@Composable
+fun RegisterRequirementItem(text: String, isMet: Boolean) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = if (isMet) Icons.Default.CheckCircle else Icons.Default.Cancel,
+            contentDescription = null,
+            tint = if (isMet) Color(0xFF00BFA5) else Color.LightGray,
+            modifier = Modifier.size(14.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = text,
+            color = if (isMet) Color.White else Color.LightGray,
+            style = MaterialTheme.typography.labelSmall
+        )
     }
 }
 

@@ -11,7 +11,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,17 +19,33 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sikeluh.ui.components.BottomNavigationBar
 import com.example.sikeluh.ui.theme.*
+import com.example.sikeluh.viewmodel.AduanViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StatusAduanScreen(navController: NavController, status: String) {
+fun StatusAduanScreen(
+    navController: NavController, 
+    aduanId: String,
+    viewModel: AduanViewModel = viewModel()
+) {
+    val aduans by viewModel.aduans.collectAsState()
+    val aduan = aduans.find { it.id == aduanId }
+
+    // Memastikan data dimuat saat layar dibuka
+    LaunchedEffect(Unit) {
+        viewModel.fetchAduans()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -52,15 +68,34 @@ fun StatusAduanScreen(navController: NavController, status: String) {
         ) {
             item {
                 Spacer(modifier = Modifier.height(8.dp))
+                // Menampilkan Kategori sebagai Judul
                 Text(
-                    text = "Jalan Rusak di Jl. Merdeka No.123, Kecamatan lalauI",
-                    style = MaterialTheme.typography.headlineSmall
+                    text = aduan?.kategoriKeluhan?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } ?: "Detail Aduan",
+                    style = MaterialTheme.typography.headlineSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Bold
                 )
+                // Menampilkan Deskripsi di bawah judul
                 Text(
-                    text = "Diadukan pada 25 November 2025",
+                    text = aduan?.deskripsiKeluhan ?: "",
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(top = 4.dp),
+                    color = Color.DarkGray
+                )
+                // Menampilkan Lokasi
+                Text(
+                    text = aduan?.lokasiAduan ?: "Lokasi tidak diketahui",
+                    color = Color.Gray,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                // Menampilkan Tanggal
+                Text(
+                    text = "Diadukan pada ${aduan?.createdAt?.take(10) ?: "-"}",
                     color = Color.Gray,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 4.dp)
                 )
             }
 
@@ -118,38 +153,39 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                         HorizontalDivider(color = Color(0xFFE2E8F0))
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Progress Logic
-                        val currentStep = when (status) {
-                            "Menunggu Verifikasi" -> 2 // Sedang Diverifikasi
-                            "Dalam Proses" -> 3       // Sedang Dalam Pengerjaan
-                            "Selesai" -> 4            // Sudah Selesai
+                        // Logika Kemajuan
+                        val currentStep = when (aduan?.status) {
+                            "Menunggu Verifikasi" -> 1
+                            "Diverifikasi" -> 2
+                            "Dalam Pengerjaan" -> 3
+                            "Selesai" -> 4
                             else -> 1
                         }
 
                         StatusStepItem(
                             title = "Laporan Terkirim",
-                            time = "12 Okt 2023, 09:45 AM",
+                            time = aduan?.createdAt?.take(16) ?: "-",
                             isCompleted = currentStep > 1,
                             isActive = currentStep == 1,
                             showLine = true
                         )
                         StatusStepItem(
                             title = "Diverifikasi",
-                            time = if (currentStep >= 2) "13 Okt 2023, 14:20 PM" else "Menunggu verifikasi",
+                            time = if (currentStep >= 2) "Sudah diverifikasi" else "Menunggu verifikasi",
                             isCompleted = currentStep > 2,
                             isActive = currentStep == 2,
                             showLine = true
                         )
                         StatusStepItem(
                             title = "Dalam Pengerjaan",
-                            time = if (currentStep >= 3) "14 Okt 2023, 08:00 AM" else "Menunggu pengerjaan",
+                            time = if (currentStep >= 3) "Sedang dikerjakan" else "Menunggu pengerjaan",
                             isCompleted = currentStep > 3,
                             isActive = currentStep == 3,
                             showLine = true
                         )
                         StatusStepItem(
                             title = "Selesai",
-                            time = if (currentStep >= 4) "15 Okt 2023, 16:00 PM" else "Menunggu penyelesaian",
+                            time = if (currentStep >= 4) "Telah selesai" else "Menunggu penyelesaian",
                             isCompleted = currentStep > 4,
                             isActive = currentStep == 4,
                             showLine = false
@@ -260,6 +296,6 @@ fun StatusStepItem(
 @Composable
 fun StatusAduanScreenPreview() {
     SiKeluhTheme {
-        StatusAduanScreen(navController = rememberNavController(), status = "Dalam Proses")
+        StatusAduanScreen(navController = rememberNavController(), aduanId = "dummy-id")
     }
 }

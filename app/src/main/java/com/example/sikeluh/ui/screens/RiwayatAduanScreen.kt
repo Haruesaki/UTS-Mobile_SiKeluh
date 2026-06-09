@@ -112,7 +112,7 @@ fun AduanItemCardReal(aduan: Aduan, navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navController.navigate("status/${aduan.status}")
+                navController.navigate("status/${aduan.id}")
             }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

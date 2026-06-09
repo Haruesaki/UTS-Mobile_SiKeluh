@@ -24,7 +24,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    private val _isLoggedIn = MutableStateFlow<Boolean?>(null) // null means still checking
+    private val _isLoggedIn = MutableStateFlow<Boolean?>(null) // null berarti masih memeriksa
     val isLoggedIn: StateFlow<Boolean?> = _isLoggedIn
 
     init {
@@ -36,7 +36,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             val nik = sessionManager.getNik().first()
             if (nik != null) {
                 try {
-                    // Fetch full profile from database using NIK saved in session
+                    // Ambil profil lengkap dari basis data menggunakan NIK yang disimpan di sesi
                     val profile = repository.getProfileByNik(nik)
                     if (profile != null) {
                         _currentUser.value = profile
@@ -64,7 +64,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _error.value = null
             try {
                 val profile = repository.signIn(nik, pass)
-                sessionManager.saveSession(nik, profile.id) // Save NIK and ID to DataStore
+                sessionManager.saveSession(nik, profile.id) // Simpan NIK dan ID ke DataStore
                 _currentUser.value = profile
                 _isLoggedIn.value = true
                 onSuccess()
@@ -99,7 +99,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _error.value = null
             try {
                 val profile = repository.signUp(nik, pass, nama)
-                sessionManager.saveSession(nik, profile.id) // Save NIK and ID to DataStore
+                sessionManager.saveSession(nik, profile.id) // Simpan NIK dan ID ke DataStore
                 _currentUser.value = profile
                 _isLoggedIn.value = true
                 onSuccess()
@@ -114,7 +114,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     fun logout(onSuccess: () -> Unit) {
         viewModelScope.launch {
             try {
-                sessionManager.clearSession() // Clear DataStore
+                sessionManager.clearSession() // Hapus DataStore
                 repository.signOut()
                 _currentUser.value = null
                 _isLoggedIn.value = false
@@ -157,16 +157,16 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // Verify current password
+                // Verifikasi kata sandi saat ini
                 if (user.password != currentPass) {
                     onError("Kata sandi saat ini salah")
                     return@launch
                 }
                 
-                // Update password in database
+                // Perbarui kata sandi di basis data
                 repository.updatePassword(user.id, newPass)
                 
-                // Update local session
+                // Perbarui sesi lokal
                 _currentUser.value = user.copy(password = newPass)
                 onSuccess()
             } catch (e: Exception) {

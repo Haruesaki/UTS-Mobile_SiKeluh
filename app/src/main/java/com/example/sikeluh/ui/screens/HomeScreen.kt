@@ -54,7 +54,7 @@ fun HomeScreen(
         viewModel.fetchAduans()
     }
 
-    // Dummy data for "Jelajahi Aduan" matching design reference
+    // Data dummy untuk "Jelajahi Aduan" yang sesuai dengan referensi desain
     val exploreDummyAduans = listOf(
         Aduan(
             kategoriKeluhan = "Lalu Lintas dan Transportasi",
@@ -84,7 +84,7 @@ fun HomeScreen(
         bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-            // Header Wrapper - Fixed position logic
+            // Header Wrapper - Logika posisi tetap
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,7 +97,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Profile Picture in top bar
+                    // Foto Profil di bilah atas
                     Box(
                         modifier = Modifier
                             .size(42.dp)
@@ -115,7 +115,7 @@ fun HomeScreen(
                         )
                     }
                     
-                    // Logo Drawable in top bar
+                    // Logo di bilah atas
                     Image(
                         painter = painterResource(id = R.drawable.logo_sikeluh),
                         contentDescription = "Logo",
@@ -217,7 +217,7 @@ fun HomeScreen(
                     }
                 }
 
-                // Aduan Saya Section (Removed "Lihat Semua")
+                // Bagian Aduan Saya (Dihapus "Lihat Semua")
                 item { 
                     Text(
                         text = "Aduan Saya", 
@@ -227,7 +227,10 @@ fun HomeScreen(
                     )
                 }
                 
-                val userAduans = aduans.filter { it.idPengguna == user?.id }
+                val userAduans = aduans
+                    .filter { it.idPengguna == user?.id }
+                    .sortedByDescending { it.createdAt }
+
                 if (userAduans.isEmpty()) {
                     item {
                         Text(
@@ -239,12 +242,12 @@ fun HomeScreen(
                     }
                 } else {
                     items(userAduans.take(1)) { aduan ->
-                        // Displays REAL database data with Remote Image
+                        // Menampilkan data basis data NYATA dengan Gambar Jarak Jauh
                         AduanCardNew(aduan, navController)
                     }
                 }
 
-                // Jelajahi Aduan Section (Removed "Lihat Semua")
+                // Bagian Jelajahi Aduan (Dihapus "Lihat Semua")
                 item { 
                     Text(
                         text = "Jelajahi Aduan", 
@@ -255,7 +258,7 @@ fun HomeScreen(
                 }
                 
                 items(exploreDummyAduans) { dummy ->
-                    // Displays Dummy Data with local drawable images
+                    // Menampilkan Data Dummy dengan gambar drawable lokal
                     AduanCardNew(
                         aduan = dummy, 
                         navController = navController, 
@@ -286,7 +289,7 @@ fun AduanCardNew(
             .fillMaxWidth()
             .height(130.dp)
             .clickable { 
-                if (!isDummy) navController.navigate("status/${aduan.status}")
+                if (!isDummy) navController.navigate("status/${aduan.id}")
             }
             .shadow(4.dp, RoundedCornerShape(20.dp)),
         shape = RoundedCornerShape(20.dp)
@@ -305,7 +308,7 @@ fun AduanCardNew(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Image handling: Local Drawable for dummy, Remote URL for real
+                // Penanganan gambar: Drawable Lokal untuk dummy, URL Jarak Jauh untuk asli
                 if (isDummy) {
                     Image(
                         painter = painterResource(id = dummyImageRes),

@@ -31,9 +31,9 @@ class MainActivity : ComponentActivity() {
                 val authViewModel: AuthViewModel = viewModel()
                 val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
-                // Wait until session check is complete
+                // Tunggu sampai pemeriksaan sesi selesai
                 if (isLoggedIn == null) {
-                    // Show a simple loading screen or splash
+                    // Tampilkan layar pemuatan sederhana atau splash
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator()
                     }
@@ -57,13 +57,13 @@ class MainActivity : ComponentActivity() {
                         composable("about_app") { AboutAppScreen(navController) }
                         composable("map_selection") { MapSelectionScreen(navController) }
 
-                        // Rute dengan parameter status
+                        // Rute dengan parameter aduanId
                         composable(
-                            route = "status/{status}",
-                            arguments = listOf(navArgument("status") { type = NavType.StringType })
+                            route = "status/{aduanId}",
+                            arguments = listOf(navArgument("aduanId") { type = NavType.StringType })
                         ) { backStackEntry ->
-                            val status = backStackEntry.arguments?.getString("status") ?: "Menunggu Verifikasi"
-                            StatusAduanScreen(navController, status)
+                            val aduanId = backStackEntry.arguments?.getString("aduanId") ?: ""
+                            StatusAduanScreen(navController, aduanId)
                         }
                         // Fallback route tanpa parameter
                         composable("status") { StatusAduanScreen(navController, "Menunggu Verifikasi") }

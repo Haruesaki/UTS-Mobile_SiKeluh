@@ -5,7 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,7 +36,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = viewMod
     val context = LocalContext.current
     var nik by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var rememberMe by remember { mutableStateOf(false) }
 
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
@@ -50,6 +51,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = viewMod
         modifier = Modifier
             .fillMaxSize()
             .background(AuthBg)
+            .verticalScroll(rememberScrollState())
             .padding(24.dp),
         horizontalAlignment = Alignment.Start
     ) {
@@ -92,22 +94,6 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel = viewMod
             placeholder = "Password",
             isPassword = true
         )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Remember Me
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(
-                checked = rememberMe,
-                onCheckedChange = { rememberMe = it },
-                colors = CheckboxDefaults.colors(
-                    uncheckedColor = Color.White,
-                    checkedColor = Color.White,
-                    checkmarkColor = AuthBg
-                )
-            )
-            Text("Remember Me", color = Color.White, style = MaterialTheme.typography.bodyMedium)
-        }
 
         Spacer(modifier = Modifier.height(32.dp))
 

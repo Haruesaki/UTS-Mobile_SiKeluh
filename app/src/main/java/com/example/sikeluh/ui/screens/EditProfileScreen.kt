@@ -60,21 +60,21 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
     var telepon by remember { mutableStateOf(user?.nomorTelepon ?: "") }
     var alamat by remember { mutableStateOf(user?.alamat ?: "") }
     
-    // Profile Image State
+    // Status Gambar Profil
     var selectedImageUri by remember { mutableStateOf<Uri?>(user?.fotoProfil?.let { Uri.parse(it) }) }
     var tempImageUri by remember { mutableStateOf<Uri?>(null) }
     var pendingImageUri by remember { mutableStateOf<Uri?>(null) }
     var showImageSourceDialog by remember { mutableStateOf(false) }
     var showCropDialog by remember { mutableStateOf(false) }
 
-    // Helper for camera file
+    // Pembantu untuk file kamera
     fun createImageFile(context: Context): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir = context.getExternalFilesDir(android.os.Environment.DIRECTORY_PICTURES)
         return File.createTempFile("PROFILE_${timeStamp}_", ".jpg", storageDir)
     }
 
-    // Launchers
+    // Peluncur (Launchers)
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -128,7 +128,7 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Profile Image Section (1:1 Ratio)
+            // Bagian Gambar Profil (Rasio 1:1)
             Box(
                 modifier = Modifier
                     .padding(vertical = 24.dp)
@@ -144,7 +144,7 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
                             .clip(CircleShape)
                             .border(4.dp, Color.White, CircleShape)
                             .shadow(4.dp, CircleShape),
-                        contentScale = ContentScale.Crop // Ensures 1:1 display
+                        contentScale = ContentScale.Crop // Memastikan tampilan 1:1
                     )
                 } else {
                     Image(
@@ -159,7 +159,7 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
                     )
                 }
                 
-                // Camera Icon overlay
+                // Hamparan Ikon Kamera (Overlay)
                 Box(
                     modifier = Modifier
                         .size(45.dp)
@@ -187,7 +187,7 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            // Form Card
+            // Kartu Formulir
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -203,20 +203,20 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
                 ) {
                     EditField(label = "Nama Lengkap", value = nama, onValueChange = { nama = it })
                     
-                    // NIK Field (Locked/Disabled)
+                    // Bidang NIK (Terkunci/Dinonaktifkan)
                     Column {
                         Text("Nomor Induk Kependudukan (NIK)", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = DarkNavy)
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
                             value = nik,
                             onValueChange = {},
-                            readOnly = true, // Lock the field
-                            enabled = false, // Visual cue for locked field
+                            readOnly = true, // Mengunci bidang
+                            enabled = false, // Isyarat visual untuk bidang yang terkunci
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(8.dp),
                             colors = OutlinedTextFieldDefaults.colors(
                                 disabledContainerColor = Color(0xFFF1F5F9),
-                                disabledTextColor = Color.Black, // Make it readable even if disabled
+                                disabledTextColor = Color.Black, // Buat agar tetap terbaca meskipun dinonaktifkan
                                 disabledBorderColor = Color.LightGray
                             )
                         )
@@ -277,7 +277,7 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
                 }
             }
 
-            // Submit Button
+            // Tombol Kirim
             if (isLoading) {
                 CircularProgressIndicator(color = PrimaryTeal)
             } else {
@@ -358,7 +358,7 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
         )
     }
 
-    // Dialog: Crop Preview (1:1 Ratio with Manual Positioning)
+    // Dialog: Pratinjau Potong (Rasio 1:1 dengan Penentuan Posisi Manual)
     if (showCropDialog && pendingImageUri != null) {
         var scale by remember { mutableStateOf(1f) }
         var offset by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
@@ -371,7 +371,7 @@ fun EditProfileScreen(navController: NavController, viewModel: AuthViewModel = v
                     Text("Gunakan 2 jari untuk zoom/geser foto ke dalam lingkaran", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                     Spacer(modifier = Modifier.height(16.dp))
                     
-                    // The Cropping Area
+                    // Area Pemotongan
                     Box(
                         modifier = Modifier
                             .size(250.dp)
