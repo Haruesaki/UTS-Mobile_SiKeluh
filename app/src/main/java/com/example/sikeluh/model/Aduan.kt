@@ -14,13 +14,15 @@ data class Aduan(
     @SerialName("lampiran_foto")
     val lampiranFoto: String? = null,
     @SerialName("lokasi_aduan")
-    val lokasiAduan: String? = null,
+    val lokasiAduan: String,
     @SerialName("alamat_provinsi")
-    val alamatProvinsi: String? = null,
+    val alamatProvinsi: String,
     @SerialName("alamat_kota")
-    val alamatKota: String? = null,
+    val alamatKota: String,
     @SerialName("alamat_kecamatan")
-    val alamatKecamatan: String? = null,
+    val alamatKecamatan: String,
+    @SerialName("id_pengguna")
+    val idPengguna: String? = null,
     @SerialName("status")
     val status: String? = "Menunggu Verifikasi",
     @SerialName("created_at")

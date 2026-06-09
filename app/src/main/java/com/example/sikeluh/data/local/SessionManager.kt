@@ -15,23 +15,32 @@ class SessionManager(private val context: Context) {
 
     companion object {
         val USER_NIK = stringPreferencesKey("user_nik")
+        val USER_ID = stringPreferencesKey("user_id")
     }
 
-    suspend fun saveSession(nik: String) {
+    suspend fun saveSession(nik: String, userId: String) {
         context.dataStore.edit { preferences ->
             preferences[USER_NIK] = nik
+            preferences[USER_ID] = userId
         }
     }
 
-    fun getSession(): Flow<String?> {
+    fun getNik(): Flow<String?> {
         return context.dataStore.data.map { preferences ->
             preferences[USER_NIK]
+        }
+    }
+
+    fun getUserId(): Flow<String?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[USER_ID]
         }
     }
 
     suspend fun clearSession() {
         context.dataStore.edit { preferences ->
             preferences.remove(USER_NIK)
+            preferences.remove(USER_ID)
         }
     }
 }

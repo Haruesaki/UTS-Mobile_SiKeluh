@@ -158,7 +158,7 @@ fun StatusAduanScreen(navController: NavController, status: String) {
                 }
             }
 
-            // Button Hubungi Layanan
+            // Button Hubungi Layanan Bantuan
             item {
                 Button(
                     onClick = { /* TODO */ },

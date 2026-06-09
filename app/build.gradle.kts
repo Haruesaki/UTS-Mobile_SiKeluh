@@ -56,6 +56,7 @@ dependencies {
 
 // Modul Postgrest untuk operasi CRUD Database
     implementation("io.github.jan-tennert.supabase:postgrest-kt:2.4.3")
+    implementation("io.github.jan-tennert.supabase:storage-kt:2.4.3")
 
 // Mesin HTTP Ktor (Wajib untuk Supabase SDK di Android)
     implementation("io.ktor:ktor-client-android:2.3.11")

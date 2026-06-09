@@ -30,13 +30,42 @@ class AduanViewModel : ViewModel() {
         }
     }
 
-    fun submitAduan(aduan: Aduan) {
+    fun fetchUserAduans(userId: String) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
-                repository.createAduan(aduan)
-                fetchAduans() // Refresh list
+                _aduans.value = repository.getAduanByUserId(userId)
             } catch (e: Exception) {
                 e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun submitAduan(aduan: Aduan, imageBytes: ByteArray? = null, onResult: (Boolean, String?) -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                var finalAduan = aduan
+                if (imageBytes != null) {
+                    val fileName = "aduan_${System.currentTimeMillis()}.jpg"
+                    try {
+                        val imageUrl = repository.uploadImage(fileName, imageBytes)
+                        finalAduan = aduan.copy(lampiranFoto = imageUrl)
+                    } catch (e: Exception) {
+                        onResult(false, "Gagal mengunggah gambar: ${e.message}")
+                        return@launch
+                    }
+                }
+                repository.createAduan(finalAduan)
+                fetchAduans()
+                onResult(true, null)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                onResult(false, "Gagal menyimpan aduan: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }

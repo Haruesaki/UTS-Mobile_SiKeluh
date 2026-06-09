@@ -2,8 +2,7 @@ package com.example.sikeluh.data.repository
 
 import com.example.sikeluh.data.remote.SupabaseClient
 import com.example.sikeluh.model.UserProfile
-import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -22,7 +21,7 @@ class AuthRepository {
         
         try {
             // Direct Insert into 'pengguna' table
-            SupabaseClient.client.postgrest["pengguna"].insert(profile)
+            SupabaseClient.client.from("pengguna").insert(profile)
             currentUserProfile = profile
             profile
         } catch (e: Exception) {
@@ -33,7 +32,7 @@ class AuthRepository {
     suspend fun signIn(nik: String, password: String): UserProfile = withContext(Dispatchers.IO) {
         try {
             // Direct Query to match nik and password
-            val profile = SupabaseClient.client.postgrest["pengguna"]
+            val profile = SupabaseClient.client.from("pengguna")
                 .select {
                     filter {
                         eq("nik", nik)
@@ -51,9 +50,50 @@ class AuthRepository {
         }
     }
 
-    suspend fun getCurrentProfile(): UserProfile? = withContext(Dispatchers.IO) {
-        // Return the cached profile from the current app session
-        currentUserProfile
+    suspend fun getProfileByNik(nik: String): UserProfile? = withContext(Dispatchers.IO) {
+        try {
+            val profile = SupabaseClient.client.from("pengguna")
+                .select {
+                    filter {
+                        eq("nik", nik)
+                    }
+                }
+                .decodeSingleOrNull<UserProfile>()
+            
+            profile?.let {
+                currentUserProfile = it
+            }
+            profile
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun updateProfile(profile: UserProfile) = withContext(Dispatchers.IO) {
+        try {
+            SupabaseClient.client.from("pengguna").update(profile) {
+                filter {
+                    eq("id", profile.id)
+                }
+            }
+            currentUserProfile = profile
+        } catch (e: Exception) {
+            throw Exception("Gagal memperbarui profil: ${e.message}")
+        }
+    }
+
+    suspend fun updatePassword(userId: String, newPassword: String) = withContext(Dispatchers.IO) {
+        try {
+            SupabaseClient.client.from("pengguna").update(
+                mapOf("password" to newPassword)
+            ) {
+                filter {
+                    eq("id", userId)
+                }
+            }
+        } catch (e: Exception) {
+            throw Exception("Gagal memperbarui kata sandi: ${e.message}")
+        }
     }
 
     suspend fun signOut() = withContext(Dispatchers.IO) {

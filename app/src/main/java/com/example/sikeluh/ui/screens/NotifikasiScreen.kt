@@ -37,8 +37,8 @@ fun NotifikasiScreen(
     val user by authViewModel.currentUser.collectAsState()
     val notifications by viewModel.notifications.collectAsState()
 
-    LaunchedEffect(user) {
-        user?.id?.let { viewModel.fetchNotifications(it) }
+    LaunchedEffect(Unit) {
+        viewModel.fetchNotifications(user?.id ?: "dummy_user")
     }
 
     Scaffold(

@@ -2,6 +2,7 @@ package com.example.sikeluh.data.remote
 
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.storage.Storage
 
 object SupabaseClient {
     val client = createSupabaseClient(
@@ -9,5 +10,6 @@ object SupabaseClient {
         supabaseKey = "sb_publishable_8L32MlLQIH-loDMCZ8xc2Q_ppXqNydA"
     ) {
         install(Postgrest)
+        install(Storage)
     }
 }

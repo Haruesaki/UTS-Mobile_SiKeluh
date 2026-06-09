@@ -31,14 +31,22 @@ import com.example.sikeluh.model.Aduan
 import com.example.sikeluh.ui.components.BottomNavigationBar
 import com.example.sikeluh.ui.theme.*
 import com.example.sikeluh.viewmodel.AduanViewModel
+import com.example.sikeluh.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RiwayatAduanScreen(navController: NavController, viewModel: AduanViewModel = viewModel()) {
+fun RiwayatAduanScreen(
+    navController: NavController, 
+    viewModel: AduanViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
+) {
     val aduans by viewModel.aduans.collectAsState()
+    val user by authViewModel.currentUser.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchAduans()
+    LaunchedEffect(user) {
+        user?.id?.let {
+            viewModel.fetchUserAduans(it)
+        }
     }
 
     Scaffold(

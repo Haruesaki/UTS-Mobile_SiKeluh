@@ -33,15 +33,17 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun checkSession() {
         viewModelScope.launch {
-            val nik = sessionManager.getSession().first()
+            val nik = sessionManager.getNik().first()
             if (nik != null) {
                 try {
-                    // Fetch profile from database using NIK
-                    // Note: AuthRepository.signIn currently sets currentUserProfile
-                    // We might need a direct way to fetch by NIK if session is found.
-                    // For now, let's assume we can re-verify or just set the NIK.
-                    // Since it's a custom auth, we'll just check if nik exists.
-                    _isLoggedIn.value = true
+                    // Fetch full profile from database using NIK saved in session
+                    val profile = repository.getProfileByNik(nik)
+                    if (profile != null) {
+                        _currentUser.value = profile
+                        _isLoggedIn.value = true
+                    } else {
+                        _isLoggedIn.value = false
+                    }
                 } catch (e: Exception) {
                     _isLoggedIn.value = false
                 }
@@ -62,7 +64,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _error.value = null
             try {
                 val profile = repository.signIn(nik, pass)
-                sessionManager.saveSession(nik) // Save NIK to DataStore
+                sessionManager.saveSession(nik, profile.id) // Save NIK and ID to DataStore
                 _currentUser.value = profile
                 _isLoggedIn.value = true
                 onSuccess()
@@ -97,7 +99,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             _error.value = null
             try {
                 val profile = repository.signUp(nik, pass, nama)
-                sessionManager.saveSession(nik) // Save NIK to DataStore
+                sessionManager.saveSession(nik, profile.id) // Save NIK and ID to DataStore
                 _currentUser.value = profile
                 _isLoggedIn.value = true
                 onSuccess()
@@ -119,6 +121,58 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 onSuccess()
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    fun updateProfile(nama: String, nik: String, email: String, telepon: String, alamat: String, fotoProfil: String?, onSuccess: () -> Unit) {
+        val user = _currentUser.value ?: return
+        
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            try {
+                val updatedProfile = user.copy(
+                    nama = nama,
+                    nik = nik,
+                    email = email,
+                    nomorTelepon = telepon,
+                    alamat = alamat,
+                    fotoProfil = fotoProfil
+                )
+                repository.updateProfile(updatedProfile)
+                _currentUser.value = updatedProfile
+                onSuccess()
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun changePassword(currentPass: String, newPass: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        val user = _currentUser.value ?: return
+        
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Verify current password
+                if (user.password != currentPass) {
+                    onError("Kata sandi saat ini salah")
+                    return@launch
+                }
+                
+                // Update password in database
+                repository.updatePassword(user.id, newPass)
+                
+                // Update local session
+                _currentUser.value = user.copy(password = newPass)
+                onSuccess()
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _isLoading.value = false
             }
         }
     }

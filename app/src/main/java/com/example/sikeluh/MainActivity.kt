@@ -50,6 +50,11 @@ class MainActivity : ComponentActivity() {
                         composable("riwayat") { RiwayatAduanScreen(navController) }
                         composable("notif") { NotifikasiScreen(navController) }
                         composable("profile") { ProfileScreen(navController, authViewModel) }
+                        composable("edit_profile") { EditProfileScreen(navController, authViewModel) }
+                        composable("change_password") { ChangePasswordScreen(navController, authViewModel) }
+                        composable("privacy_policy") { PrivacyPolicyScreen(navController) }
+                        composable("terms_conditions") { TermsConditionsScreen(navController) }
+                        composable("about_app") { AboutAppScreen(navController) }
                         composable("map_selection") { MapSelectionScreen(navController) }
 
                         // Rute dengan parameter status
